@@ -1,32 +1,17 @@
-general:
-  artifacts:
-      - "build/test_images/"
-      - "build/test_images_diff/"
-
 machine:
   node:
     version: 6.1.0
-  timezone:
-    America/Anchorage
-  services:
-    - docker
 
 dependencies:
-  pre:
-    - eval $(node tasks/docker.js pull)
-  post:
-    - eval $(node tasks/docker.js run)
-    - npm run cibuild
-    - npm run pretest
-    - eval $(node tasks/docker.js setup)
-    - npm prune && npm ls
+  override:
+      - lsb_release -a
+      - sudo add-apt-repository -y ppa:canonical-chromium-builds/stage
+      - sudo apt-get update
+      - sudo apt-get install chromium-browser
+      - git clone https://gist.github.com/f328c38536360ff37c0de62172c01617.git headless-test
+      - cd headless-test && npm i
 
 test:
   override:
-    - npm run test-image
-    - npm run test-image-gl2d
-    - npm run test-export
-    - npm run citest-jasmine
-    - npm run test-bundle
-    - npm run test-syntax
-    - eslint .
+    - sudo pkill Xvfb
+    - cd headless-test && npm test

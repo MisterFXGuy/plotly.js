@@ -12,11 +12,10 @@ machine:
     - docker
 
 dependencies:
-  pre:
-    - eval $(node tasks/docker.js pull)
   post:
-    - eval $(node tasks/docker.js run)
+    - eval $(node tasks/docker.js pull)
     - npm run cibuild
+    - eval $(node tasks/docker.js run)
     - npm run pretest
     - eval $(node tasks/docker.js setup)
     - npm prune && npm ls

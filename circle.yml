@@ -13,6 +13,7 @@ machine:
 
 dependencies:
   post:
+    - lsb_release -a
     - eval $(node tasks/docker.js pull)
     - npm run cibuild
     - eval $(node tasks/docker.js run)
